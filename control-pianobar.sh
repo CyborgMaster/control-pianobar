@@ -33,16 +33,18 @@
   fold="$XDG_CONFIG_HOME/pianobar"
   # The pianobar executable
   pianobar="pianobar"
-  # A blank icon to show when no albumart is found. I prefer to use
-  # the actual pandora icon for this, which you can easily find and
-  # download yourself. I don't include it here for copyright concerns.
-  blankicon="$fold/pandora.jpg"
-  
+
 # You probably shouldn't mess with these (or anything else)
 if [[ "$fold" == "/pianobar" ]]; then
     fold="$HOME/.config/pianobar"
-    blankicon="$fold""$blankicon"
+    # blankicon="$fold""$blankicon"
 fi
+
+# A blank icon to show when no albumart is found. I prefer to use
+# the actual pandora icon for this, which you can easily find and
+# download yourself. I don't include it here for copyright concerns.
+blankicon="$fold/pandora.jpg"
+
 notify="notify-send --hint=int:transient:1"
 zenity="zenity"
 logf="$fold/log"
@@ -73,25 +75,25 @@ mkdir -p "$fold/albumart"
 rm "$logf" 2> /dev/null
 rm "$ctlf" 2> /dev/null
 mkfifo "$ctlf"
-$notify -t 2500 "Starting Pianobar" "Logging in..."
+$notify -t 2500 -i "$blankicon" "Starting Pianobar" "Logging in..."
 "$pianobar" | tee "$logf"
 fi;;
-    
+
     love|l|+)
 echo -n "+" > "$ctlf" ;;
-    
+
     ban|b|-|hate)
 echo -n "-" > "$ctlf" ;;
-    
+
     next|n)
 echo -n "n" > "$ctlf" ;;
 
     tired|t)
 echo -n "t" > "$ctlf"
-$notify -t 2000 "Tired" "We won't play this song for at least a month.";;
-    
+$notify -t 2000 -i "$blankicon" "Tired" "We won't play this song for at least a month.";;
+
     stop|quit|q)
-$notify -t 1000 "Quitting Pianobar"
+$notify -t 1000 -i "$blankicon" "Quitting Pianobar"
 echo -n "q" > "$ctlf"
 echo "0" > "$ip"
 sleep 1
@@ -101,18 +103,18 @@ kill -9 $(pidof pianobar)
 if [[ -n $(pidof pianobar) ]]; then
 $notify -t 2000 "I'm Sorry" "I don't know what's happening. Could you try killing it manually?"
 else
-$notify -t 2000 "Success" "Pianobar closed."
+$notify -t 2000 -i "$blankicon" "Success" "Pianobar closed."
 fi
 fi;;
-    
+
     explain|e)
 echo -n "e" > "$ctlf" ;;
-    
+
     playing|current|c)
 sleep 1
 time="$(grep "#" "$logf" --text | tail -1 | sed 's/.*# \+-\([0-9:]\+\)\/\([0-9:]\+\)/\\\\-\1\\\/\2/')"
 $notify -t 5000 -i "`cat $an`" "$(cat "$np")" "$(sed "1 s/.*/$time/" "$ds")";;
-    
+
     nextstation|ns)
 stat="$(grep --text "^Station: " "$ds" | sed 's/Station: //')"
 newnum="$((`grep --text "$stat" "$stl" | sed 's/\([0-9]\+\)).*/\1/'`+1))"
@@ -122,25 +124,25 @@ newnum=0
 newstt="$(sed "s/^$newnum) \(.*\)/-->\1/" "$stl" | sed 's/^[0-9]\+) \(.*\)/* \1/')"
 fi
 echo "s$newnum" > "$ctlf"
-$notify -t 2000 "Switching station" "$newstt";;
-    
+$notify -t 2000 -i "$blankicon" "Switching station" "$newstt";;
+
     prevstation|ps)
 stat="$(grep --text "^Station: " "$ds" | sed 's/Station: //')"
 newnum="$((`grep --text "$stat" "$stl" | sed 's/\([0-9]\+\)).*/\1/'`-1))"
 [[ "$newnum" -lt 0 ]] && newnum=$(($(wc -l < "$stl")-1))
 newstt="$(sed "s/^$newnum) \(.*\)/-->\1/" "$stl" | sed 's/^[0-9]\+) \(.*\)/* \1/')"
 echo "s$newnum" > "$ctlf"
-$notify -t 2000 "Switching station" "$newstt";;
-    
+$notify -t 2000 -i "$blankicon" "Switching station" "$newstt";;
+
     switchstation|ss)
 text="$(grep --text "[0-9]\+)" "$logf" | sed 's/.*\t\(.*)\) *\(Q \+\)\?\([^ ].*\)/\1 \3/')""\n \n Type a number."
 newnum="$($zenity --entry --title="Switch Station" --text="$(cat "$stl")\n Pick a number.")"
 if [[ -n "$newnum" ]]; then
 newstt="$(sed "s/^$newnum) \(.*\)/-->\1/" "$stl" | sed 's/^[0-9]\+) \(.*\)/* \1/')"
 echo "s$newnum" > "$ctlf"
-$notify -t 2000 "Switching station" "$newstt"
+$notify -t 2000 -i "$blankicon" "Switching station" "$newstt"
 fi;;
-    
+
     upcoming|queue|u)
 echo -n "u" > "$ctlf"
 sleep .5
@@ -148,9 +150,9 @@ list="$(grep --text '[0-9])' $logf | sed 's/.*\t [0-9])/*/')"
 if [[ -z "$list" ]]; then
 $notify "No Upcoming Songs" "This is probably the last song in the list."
 else
-$notify -t 5000 "Upcoming Songs" "$list"
+$notify -t 5000 -i "$blankicon" "Upcoming Songs" "$list"
 fi;;
-    
+
     "history"|h)
 echo -n "h" > "$ctlf"
 text="$(grep --text "[0-9]\+)" "$logf" | sed 's/.*\t\(.*) *[^ ].*\)/\1/')""\n \n Type a number."
@@ -162,7 +164,7 @@ echo -n "$($zenity --entry --title="Do what?" --text="Love[+], Ban[-], or Tired[
 else
 echo "" > "$ctlf"
 fi;;
-    
+
     *)
 
 

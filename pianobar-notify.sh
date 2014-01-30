@@ -129,7 +129,7 @@ case "$1" in
 
     songlove)
 	   if [[ -e "$ine" ]]; then
-		  $notify -t 2500 "Song Liked" ""
+		  $notify -t 2500 -i "$blankicon" "Song Liked" ""
 		  rm -f "$ine"
 	   else
 		  $notify -t 2500 -i "`cat $an`" "Song Liked" "$artist - $title"
@@ -137,7 +137,7 @@ case "$1" in
 
     songban)
 	   if [[ -e "$ine" ]]; then
-		  $notify -t 2500 "Song Banned" ""
+		  $notify -t 2500 -i "$blankicon" "Song Banned" ""
 		  rm -f "$ine"
 	   else
 		  $notify -t 2500 -i "`cat $an`" "Song Banned" "$artist - $title"
@@ -145,7 +145,7 @@ case "$1" in
 
     songshelf)
 	   if [[ -e "$ine" ]]; then
-		  $notify -t 2500 "Song Put Away" ""
+		  $notify -t 2500 -i "$blankicon" "Song Put Away" ""
 		  rm -f "$ine"
 	   else
 		  $notify -t 2500 -i "`cat $an`" "Song Put Away" "$artist - $title"
@@ -179,7 +179,7 @@ case "$1" in
 	   elif [ "$wRet" -ne 1 ]; then
 		  $notify "Login ERROR 2" "$wRetStr"
 	   else
-		  $notify -t 2000 "Login Successful" "Fetching Stations..."
+		  $notify -t 2000 -i "$blankicon" "Login Successful" "Fetching Stations..."
 	   fi
 	   ;;
 
