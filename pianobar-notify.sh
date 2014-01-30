@@ -30,6 +30,12 @@
 # Also check if this matches you config folder
 fold="$XDG_CONFIG_HOME/pianobar"
 
+# Some of the following was copied from eventcmd.sh
+if [[ "$fold" == "/pianobar" ]]; then
+    fold="$HOME/.config/pianobar"
+    # blankicon="$fold""$blankicon"
+fi
+
 # You should also place the control-pianobar.sh script in the
 # config folder (or modify the following variable accordingly).
 controlpianobar="$fold/control-pianobar.sh"
@@ -38,11 +44,6 @@ controlpianobar="$fold/control-pianobar.sh"
 # following variable.
 blankicon="$fold/pandora.jpg"
 
-# Some of the following was copied from eventcmd.sh
-if [[ "$fold" == "/pianobar" ]]; then
-    fold="$HOME/.config/pianobar"
-    blankicon="$fold""$blankicon"
-fi
 notify="notify-send --hint=int:transient:1"
 zenity="zenity"
 logf="$fold/log"
@@ -120,12 +121,12 @@ case "$1" in
 		  $controlpianobar u 7 &
 		  rm -f "$su"
 	   fi;;
-    
+
     songexplain)
 	   cp "$ds" "$dse"
 	   tail -1 "$logf" | grep --text "(i) We're" | sed 's/.*(i).*features/*/' | sed 's/,/\n*/g' | sed 's/and \([^,]*\)\./\n* \1/' | sed 's/\* many other similarities.*/* and more./' >> "$dse"
 	   $notify -t 15000 -i "`cat $an`" "`cat $np`" "`cat $dse`";;
-    
+
     songlove)
 	   if [[ -e "$ine" ]]; then
 		  $notify -t 2500 "Song Liked" ""
@@ -133,7 +134,7 @@ case "$1" in
 	   else
 		  $notify -t 2500 -i "`cat $an`" "Song Liked" "$artist - $title"
 	   fi;;
-    
+
     songban)
 	   if [[ -e "$ine" ]]; then
 		  $notify -t 2500 "Song Banned" ""
@@ -141,7 +142,7 @@ case "$1" in
 	   else
 		  $notify -t 2500 -i "`cat $an`" "Song Banned" "$artist - $title"
 	   fi;;
-    
+
     songshelf)
 	   if [[ -e "$ine" ]]; then
 		  $notify -t 2500 "Song Put Away" ""
@@ -149,10 +150,10 @@ case "$1" in
 	   else
 		  $notify -t 2500 -i "`cat $an`" "Song Put Away" "$artist - $title"
 	   fi;;
-    
+
     stationfetchplaylist)
 	   echo "1" > "$su";;
-    
+
     usergetstations)
 	   if [[ $stationCount -gt 0 ]]; then
 		  rm -f "$stl"
@@ -162,7 +163,7 @@ case "$1" in
 	   fi
 	   echo "$($zenity --entry --title="Switch Station" --text="$(cat "$stl")")" > "$ctlf"
 	   ;;
-    
+
     userlogin)
 	   if [ "$pRet" -ne 1 ]; then
 		  $notify -t 1500 "Login ERROR 1" "$pRetStr"
@@ -181,10 +182,10 @@ case "$1" in
 		  $notify -t 2000 "Login Successful" "Fetching Stations..."
 	   fi
 	   ;;
-    
+
     songfinish)
 	   exit;;
-    
+
     *)
 	   if [ "$pRet" -ne 1 ]; then
 		  $notify -i "$blankicon" "Pianobar - ERROR" "$1 failed: $pRetStr"
