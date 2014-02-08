@@ -114,7 +114,7 @@ case "$1" in
 		  echo "$fold/albumart/$icon" > $an
 	   fi
 
-	   $notify -t 7000 -i "`cat $an`" "`cat $np`" "`cat $ds`"
+	   $notify -t 7000 -i "`cat $an`" "Now Playing" "`cat $np` `cat $ds`"
 	   echo "" > "$logf"
 
 	   if [[ -e "$su" ]]; then
