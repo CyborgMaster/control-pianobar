@@ -94,7 +94,7 @@ else
 Album: $album
 Station: $stationName" > "$ds"
 fi
-echo "$artist - $title $like" > "$np"
+echo "$title - $artist $like" > "$np"
 
 
 case "$1" in

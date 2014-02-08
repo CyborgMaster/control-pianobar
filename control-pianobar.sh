@@ -112,8 +112,8 @@ echo -n "e" > "$ctlf" ;;
 
     playing|current|c)
 sleep 1
-time="$(grep "#" "$logf" --text | tail -1 | sed 's/.*# \+-\([0-9:]\+\)\/\([0-9:]\+\)/\\\\-\1\\\/\2/')"
-$notify -t 5000 -i "`cat $an`" "$(cat "$np")" "$(sed "1 s/.*/$time/" "$ds")";;
+time="$(grep "#" "$logf" --text | tail -1 | sed 's/.*# *-\([0-9:]*\)\/\([0-9:]*\).*/-\1\\\/\2/')"
+$notify -t 5000 -i "`cat $an`" 'Now Playing' "$(cat "$np")"$'\n\n'"$(sed "1 s/.*/$time/" "$ds")";;
 
     nextstation|ns)
 stat="$(grep --text "^Station: " "$ds" | sed 's/Station: //')"
